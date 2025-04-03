@@ -7,8 +7,8 @@ import (
 	"strings"
 	"github.com/gin-gonic/gin"
 
-	"CodeManager/pkg/config"
-	"CodeManager/pkg/logger"
+	"CodeManager/internal/pkg/config"
+	"CodeManager/internal/pkg/logger"
 	"CodeManager/api"
 )
 
