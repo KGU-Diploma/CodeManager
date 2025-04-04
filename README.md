@@ -1,6 +1,6 @@
 # CodeManager
 
-# How to run service
+## How to run service
 - clone repo and go to project dir
 ```bash
 git clone git@github.com:KGU-Diploma/CodeManager.git
