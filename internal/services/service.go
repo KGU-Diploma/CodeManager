@@ -2,7 +2,6 @@ package services
 
 import (
 	"CodeManager/internal/dto"
-	"fmt"
 )
 
 type (
@@ -13,34 +12,15 @@ type (
 
 	Linter interface {
 		Lint(source string) ([]string, error)
+		ExtractLinterResult(out string) []string
 	}
 
 	Service struct {
 		Piston
-		Linter
 	}
 )
 
-type LinterFactory struct{}
 
-func (f *LinterFactory) NewLinter(language string) (Linter, error) {
-	switch language {
-	case "python":
-		return NewPythonLinter(), nil
-	default:
-		return nil, fmt.Errorf("unsupported language: %s", language)
-	}
-}
-
-
-func NewService(language string) (*Service, error) {
-	factory := &LinterFactory{}
-	linter, err := factory.NewLinter(language)
-	if err != nil {
-		return nil, err
-	}
-	return &Service{
-		Piston: NewPistonService(),
-		Linter: linter,
-	}, nil
+func NewService() *Service {
+	return &Service{Piston: NewPistonService()}
 }

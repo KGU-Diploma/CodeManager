@@ -1,12 +1,18 @@
 package services
 
+import "fmt"
 
-type LinterService struct {}
+type LinterFactory struct{}
 
-func NewLinterService() *LinterService {
-	return &LinterService{}
+func NewLinterFactory() *LinterFactory {
+	return &LinterFactory{}
 }
 
-func (ls *LinterService) Lint() {
-	panic("")
+func (f *LinterFactory) NewLinter(language string) (Linter, error) {
+	switch language {
+	case "python":
+		return NewPythonLinter(), nil
+	default:
+		return nil, fmt.Errorf("unsupported language: %s", language)
+	}
 }

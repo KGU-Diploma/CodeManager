@@ -22,15 +22,10 @@ func main() {
 	logger.InitLogger(cfg.Logger)
 	logger := slog.Default()
 
-
-	// initialize handler and register routes
-	services, err := services.NewService("python")
-	usecases := usecases.NewUsecase(services)
+	service := services.NewService()
+	usecases := usecases.NewUsecase(service)
 	handler := api.NewHandler(usecases)
 	gitEngine := handler.SetupRoutes()
-
-	// address := fmt.Sprintf("%s:%s", "127.0.0.1", strings.TrimPrefix(cfg.APP_PORT, ":"))
-	// logger.Info("Starting server...", "address", address)
 
 	httpServer := &http.Server{
 		Addr:           ":" + cfg.APP_PORT,

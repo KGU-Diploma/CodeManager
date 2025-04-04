@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os/exec"
 	"strings"
+	"CodeManager/internal/services/tools"
 )
 
 type PythonLinter struct{}
@@ -15,10 +16,8 @@ func NewPythonLinter() *PythonLinter {
 }
 
 func (l *PythonLinter) Lint(source string) ([]string, error) {
-	var issues []string
-
 	tempFile := "/tmp/temp_code.py"
-	err := WriteSourceToFile(tempFile, source)
+	err := tools.WriteSourceToFile(tempFile, source)
 	if err != nil {
 		return nil, fmt.Errorf("failed to write source to file: %w", err)
 	}
@@ -34,6 +33,14 @@ func (l *PythonLinter) Lint(source string) ([]string, error) {
 	}
 
 	output := out.String()
+	result := l.ExtractLinterResult(output)
+
+	return result, nil
+}
+
+func (l *PythonLinter) ExtractLinterResult(output string) []string {
+	var issues []string
+	
 	if len(output) == 0 {
 		issues = append(issues, "No issues found!")
 	} else {
@@ -45,5 +52,5 @@ func (l *PythonLinter) Lint(source string) ([]string, error) {
 		}
 	}
 
-	return issues, nil
+	return issues
 }

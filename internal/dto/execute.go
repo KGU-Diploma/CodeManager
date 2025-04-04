@@ -1,41 +1,45 @@
 package dto
 
+// ExecuteRequest represents the request data for execution.
+// @Description Execute a code with specified parameters.
 type ExecuteRequest struct {
-    Language           string        `json:"language" validate:"required"`                      // The language to use for execution, must be a string and must be installed.
-    Version            string        `json:"version" validate:"required"`                       // The version of the language to use for execution, must be a string containing a SemVer selector or specific version number.
-    Files              []File        `json:"files" validate:"required,dive"`                    // An array of files containing code or other data for execution. The first file is considered the main file.
-    Stdin              string        `json:"stdin,omitempty"`                                   // The text to pass as stdin to the program. Defaults to blank string.
-    Args               []string      `json:"args,omitempty"`                                    // The arguments to pass to the program. Defaults to [].
-    CompileTimeout     int           `json:"compile_timeout,omitempty" default:"10000"`         // The maximum wall-time for the compile stage in milliseconds. Defaults to 10000 (10 seconds).
-    RunTimeout         int           `json:"run_timeout,omitempty" default:"3000"`              // The maximum wall-time for the run stage in milliseconds. Defaults to 3000 (3 seconds).
-    CompileCPUTime     int           `json:"compile_cpu_time,omitempty" default:"10000"`        // The maximum CPU-time for the compile stage in milliseconds. Defaults to 10000 (10 seconds).
-    RunCPUTime         int           `json:"run_cpu_time,omitempty" default:"3000"`             // The maximum CPU-time for the run stage in milliseconds. Defaults to 3000 (3 seconds).
-    CompileMemoryLimit int           `json:"compile_memory_limit,omitempty" default:"-1"`       // The maximum memory for the compile stage in bytes. Defaults to -1 (no limit).
-    RunMemoryLimit     int           `json:"run_memory_limit,omitempty" default:"-1"`           // The maximum memory for the run stage in bytes. Defaults to -1 (no limit).
+    Language           string        `json:"language" validate:"required" swaggo:"description=The language to use for execution"`
+    Version            string        `json:"version" validate:"required" swaggo:"description=The version of the language"`
+    Files              []File        `json:"files" validate:"required,dive" swaggo:"description=The files to be executed"`
+    Stdin              string        `json:"stdin,omitempty" swaggo:"description=Input data to be passed to stdin"`
+    Args               []string      `json:"args,omitempty" swaggo:"description=Arguments to pass to the program"`
+    CompileTimeout     int           `json:"compile_timeout,omitempty" default:"10000" swaggo:"description=The compile timeout"`
+    RunTimeout         int           `json:"run_timeout,omitempty" default:"3000" swaggo:"description=The run timeout"`
+    CompileCPUTime     int           `json:"compile_cpu_time,omitempty" default:"10000" swaggo:"description=The compile CPU time"`
+    RunCPUTime         int           `json:"run_cpu_time,omitempty" default:"3000" swaggo:"description=The run CPU time"`
+    CompileMemoryLimit int           `json:"compile_memory_limit,omitempty" default:"-1" swaggo:"description=The compile memory limit"`
+    RunMemoryLimit     int           `json:"run_memory_limit,omitempty" default:"-1" swaggo:"description=The run memory limit"`
 }
 
 // File represents a file to be used in the execution request.
 type File struct {
-    Name     string `json:"name,omitempty"`                    // The name of the file to upload, must be a string containing no path or left out.
-    Content  string `json:"content" validate:"required"`       // The content of the file to upload, must be a string containing text to write.
-    Encoding string `json:"encoding,omitempty" default:"utf8"` // The encoding scheme used for the file content. Defaults to utf8.
+    Name     string `json:"name,omitempty" swaggo:"description=The name of the file"`
+    Content  string `json:"content" validate:"required" swaggo:"description=The content of the file"`
+    Encoding string `json:"encoding,omitempty" default:"utf8" swaggo:"description=The file content encoding"`
 }
 
+// ExecuteResponse represents the response after execution.
 type ExecuteResponse struct {
-	Run Run `json:"run"` 			  // The result of the execution.
-	Language string `json:"language"` // The language used for execution.
-	Version string `json:"version"`   // The version of the language used for execution.
+    Run Run `json:"run"`  // The result of the execution.
+    Language string `json:"language"` // The language used for execution.
+    Version string `json:"version"`   // The version of the language used.
 }
 
+// Run contains the result of an execution.
 type Run struct {
-	Signal string `json:"signal"` //
-	Stdout string `json:"stdout"`
-	Stderr string `json:"stderr"`
-	Code	int    `json:"code"`
-	Output string `json:"output"`
-	Memory int `json:"memory"`
-	Message string `json:"message"`
-	Status string `json:"status"`
-	CPUTime int `json:"cpu_time"`
-	WallTime int `json:"wall_time"`
+    Signal  string `json:"signal"` // The signal received during execution.
+    Stdout  string `json:"stdout"` // The output to stdout.
+    Stderr  string `json:"stderr"` // The error output to stderr.
+    Code    int    `json:"code"`   // The exit code of the program.
+    Output  string `json:"output"` // The final output.
+    Memory  int    `json:"memory"` // Memory used by the program.
+    Message string `json:"message"` // Message related to the execution result.
+    Status  string `json:"status"` // The status of the execution.
+    CPUTime int    `json:"cpu_time"` // CPU time spent in execution.
+    WallTime int   `json:"wall_time"` // Wall time taken for execution.
 }

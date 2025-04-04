@@ -2,9 +2,10 @@ package api
 
 import (
 	"CodeManager/internal/usecases"
-	"net/http"
-
 	"github.com/gin-gonic/gin"
+	"github.com/gin-contrib/cors"
+	ginSwagger "github.com/swaggo/gin-swagger"
+	swaggerFiles "github.com/swaggo/files"
 )
 
 type Handler struct{
@@ -18,15 +19,11 @@ func NewHandler(usecases *usecases.Usecase) *Handler {
 }
 
 
-func (h *Handler) Ping(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{
-		"message": "pong",
-	})
-}
-
 // RegisterRoutes registers all routes for the API
 func (h *Handler) SetupRoutes() *gin.Engine {
 	router := gin.Default()
+
+	router.Use(cors.Default()) 
 
 	health := router.Group("/health")
 	{
@@ -38,6 +35,14 @@ func (h *Handler) SetupRoutes() *gin.Engine {
 		domain.POST("/run-and-analyze", h.RunAndAnalyzeHandler)
 		domain.GET("/runtimes", h.GetRuntimesHandler)
 	}
+
+	swagger := router.Group("")
+	{
+		swagger.StaticFile("/doc.json", "./docs/swagger.json")
+	}
+	
+	url := ginSwagger.URL("http://localhost:8001/doc.json")
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler, url))
 
 	return router
 }

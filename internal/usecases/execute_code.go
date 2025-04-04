@@ -8,10 +8,14 @@ import (
 
 type ExecuteCodeUsecaseImpl struct {
 	services *services.Service
+	linterFactory *services.LinterFactory
 }
 
-func NewExecuteCodeUsecase(services *services.Service) ExecuteCodeUsecase {
-	return &ExecuteCodeUsecaseImpl{services: services}
+func NewExecuteCodeUsecase(service *services.Service) ExecuteCodeUsecase {
+	return &ExecuteCodeUsecaseImpl{
+		services: service,
+		linterFactory: services.NewLinterFactory(),
+	}
 }
 
 func (u *ExecuteCodeUsecaseImpl) Handle(req dto.ExecuteRequest) (*dto.ExecuteResponse, []string, error) {
@@ -19,8 +23,13 @@ func (u *ExecuteCodeUsecaseImpl) Handle(req dto.ExecuteRequest) (*dto.ExecuteRes
 	if err != nil {
 		return nil, nil, fmt.Errorf("failed to execute code: %w", err)
 	}
+	
+	linter, err := u.linterFactory.NewLinter(req.Language)
+	if err != nil {
+		return nil, nil, err
+	}
 
-	linterIssues, err := u.services.Linter.Lint(req.Files[0].Content)
+	linterIssues, err := linter.Lint(req.Files[0].Content)
 	if err != nil {
 		return nil, nil, fmt.Errorf("failed to lint code: %w", err)
 	}

@@ -1,0 +1,175 @@
+definitions:
+  dto.ExecuteRequest:
+    description: Execute a code with specified parameters.
+    properties:
+      args:
+        items:
+          type: string
+        type: array
+      compile_cpu_time:
+        default: 10000
+        type: integer
+      compile_memory_limit:
+        default: -1
+        type: integer
+      compile_timeout:
+        default: 10000
+        type: integer
+      files:
+        items:
+          $ref: '#/definitions/dto.File'
+        type: array
+      language:
+        type: string
+      run_cpu_time:
+        default: 3000
+        type: integer
+      run_memory_limit:
+        default: -1
+        type: integer
+      run_timeout:
+        default: 3000
+        type: integer
+      stdin:
+        type: string
+      version:
+        type: string
+    required:
+    - files
+    - language
+    - version
+    type: object
+  dto.ExecuteResponse:
+    properties:
+      language:
+        description: The language used for execution.
+        type: string
+      run:
+        allOf:
+        - $ref: '#/definitions/dto.Run'
+        description: The result of the execution.
+      version:
+        description: The version of the language used.
+        type: string
+    type: object
+  dto.File:
+    properties:
+      content:
+        type: string
+      encoding:
+        default: utf8
+        type: string
+      name:
+        type: string
+    required:
+    - content
+    type: object
+  dto.Run:
+    properties:
+      code:
+        description: The exit code of the program.
+        type: integer
+      cpu_time:
+        description: CPU time spent in execution.
+        type: integer
+      memory:
+        description: Memory used by the program.
+        type: integer
+      message:
+        description: Message related to the execution result.
+        type: string
+      output:
+        description: The final output.
+        type: string
+      signal:
+        description: The signal received during execution.
+        type: string
+      status:
+        description: The status of the execution.
+        type: string
+      stderr:
+        description: The error output to stderr.
+        type: string
+      stdout:
+        description: The output to stdout.
+        type: string
+      wall_time:
+        description: Wall time taken for execution.
+        type: integer
+    type: object
+  dto.RuntimeResponse:
+    properties:
+      aliases:
+        items:
+          type: string
+        type: array
+      language:
+        type: string
+      version:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /api/v1/run-and-analyze:
+    post:
+      consumes:
+      - application/json
+      description: This endpoint runs and analyzes the input provided in the request
+        body.
+      parameters:
+      - description: Input data for analysis
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.ExecuteRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully run and analyzed the data
+          schema:
+            $ref: '#/definitions/dto.ExecuteResponse'
+        "400":
+          description: Invalid input
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      summary: Run and analyze the provided input
+      tags:
+      - analysis
+  /api/v1/runtimes:
+    get:
+      description: Fetches a list of all available runtimes from the usecase layer.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of runtimes
+          schema:
+            items:
+              $ref: '#/definitions/dto.RuntimeResponse'
+            type: array
+        "500":
+          description: Failed to fetch runtimes
+          schema:
+            type: string
+      summary: Get all available runtimes
+      tags:
+      - runtimes
+  /health/ping:
+    get:
+      description: Simple health check to see if the server is running.
+      responses:
+        "200":
+          description: Pong response
+          schema:
+            type: string
+      summary: Ping the server
+      tags:
+      - health
+swagger: "2.0"
