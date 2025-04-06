@@ -1,8 +1,10 @@
 package api
 
 import (
-	"github.com/gin-gonic/gin"
 	"CodeManager/internal/dto"
+
+	"github.com/gin-gonic/gin"
+	"golang.org/x/exp/slog"
 )
 
 // RunAndAnalyzeHandler godoc
@@ -12,7 +14,7 @@ import (
 // @Accept  json
 // @Produce  json
 // @Param request body dto.ExecuteRequest true "Input data for analysis"
-// @Success 200 {object} dto.ExecuteResponse "Successfully run and analyzed the data"
+// @Success 200 {object} dto.MultiExecuteResponse "Successfully run and analyzed the data"
 // @Failure 400 {object} string "Invalid input"
 // @Failure 500 {object} string "Internal server error"
 // @Router /api/v1/run-and-analyze [post]
@@ -23,12 +25,14 @@ func (h *Handler) RunAndAnalyzeHandler(c *gin.Context) {
 		return
 	}
 
-	// Здесь реализуйте логику для анализа данных
-	// Примерный ответ
-	// c.JSON(200, ResultData{
-	// 	Status:  "success",
-	// 	Message: "Data successfully analyzed",
-	// })
+	result, err := h.usecases.ExecuteCodeUsecase.Handle(request)
+	if err != nil {
+		slog.Error("Failed to execute code", "error", err)
+		c.JSON(500, "Internal server error")
+		return
+	}
+	
+	c.JSON(200, result)
 }
 
 // GetRuntimesHandler godoc
@@ -42,6 +46,7 @@ func (h *Handler) RunAndAnalyzeHandler(c *gin.Context) {
 func (h *Handler) GetRuntimesHandler(c *gin.Context) {
 	runtimes, err := h.usecases.GetRuntimesUsecase.Handle()
 	if err != nil {
+		slog.Error("Failed to fetch runtimes", "error", err)
 		c.JSON(500, "Failed to fetch runtimes")
 		return
 	}

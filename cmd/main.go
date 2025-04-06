@@ -9,6 +9,7 @@ import (
 	"CodeManager/api"
 	"CodeManager/internal/pkg/config"
 	"CodeManager/internal/pkg/logger"
+	"CodeManager/internal/repositories"
 	"CodeManager/internal/services"
 	"CodeManager/internal/usecases"
 )
@@ -22,8 +23,13 @@ func main() {
 	logger.InitLogger(cfg.Logger)
 	logger := slog.Default()
 
+	db, err := repositories.NewPostgresConnection(cfg.DB_CONNECTION_STRING)
+	if err != nil {
+		// todo slog.Fatal("Could not connect to database %v", err)
+	}
+	repos := repositories.NewRepository(db)
 	service := services.NewService()
-	usecases := usecases.NewUsecase(service)
+	usecases := usecases.NewUsecase(service, repos)
 	handler := api.NewHandler(usecases)
 	gitEngine := handler.SetupRoutes()
 

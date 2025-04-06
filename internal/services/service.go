@@ -6,7 +6,7 @@ import (
 
 type (
 	Piston interface {
-		ExecuteCode(req dto.ExecuteRequest) (*dto.ExecuteResponse, error)
+		ExecuteCode(req dto.ExecuteRequest) (*dto.PistonExecuteResponse, error)
 		GetRuntimes() ([]dto.RuntimeResponse, error)
 	}
 
@@ -16,7 +16,7 @@ type (
 	}
 
 	Service struct {
-		Piston
+		Piston *PistonService
 	}
 )
 

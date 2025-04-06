@@ -11,6 +11,7 @@ type Config struct {
 	Logger   string `env:"LOGGER_LEVEL"`
 	APP_PORT string `env:"APP_PORT"`
 	PISTON_HOST string `env:"PISTON_HOST"`
+	DB_CONNECTION_STRING string `env:"DB_CONNECTION_STRING"`
 }
 
 func CreateConfig() (*Config, error) {

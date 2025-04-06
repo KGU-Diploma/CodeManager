@@ -43,7 +43,7 @@ const docTemplate = `{
                     "200": {
                         "description": "Successfully run and analyzed the data",
                         "schema": {
-                            "$ref": "#/definitions/dto.ExecuteResponse"
+                            "$ref": "#/definitions/dto.MultiExecuteResponse"
                         }
                     },
                     "400": {
@@ -110,6 +110,67 @@ const docTemplate = `{
     },
     "definitions": {
         "dto.ExecuteRequest": {
+            "type": "object",
+            "required": [
+                "piston_execute_request",
+                "task_id"
+            ],
+            "properties": {
+                "piston_execute_request": {
+                    "$ref": "#/definitions/dto.PistonExecuteRequest"
+                },
+                "task_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.File": {
+            "type": "object",
+            "required": [
+                "content"
+            ],
+            "properties": {
+                "content": {
+                    "type": "string"
+                },
+                "encoding": {
+                    "type": "string",
+                    "default": "utf8"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.MultiExecuteResponse": {
+            "description": "Response containing the results of test execution and linting issues.",
+            "type": "object",
+            "properties": {
+                "language": {
+                    "description": "The programming language used",
+                    "type": "string"
+                },
+                "lint_issues": {
+                    "description": "List of linting issues, if any",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "results": {
+                    "description": "The results of each test case executed",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.TestCaseResult"
+                    }
+                },
+                "version": {
+                    "description": "The version of the language used",
+                    "type": "string"
+                }
+            }
+        },
+        "dto.PistonExecuteRequest": {
             "description": "Execute a code with specified parameters.",
             "type": "object",
             "required": [
@@ -165,90 +226,6 @@ const docTemplate = `{
                 }
             }
         },
-        "dto.ExecuteResponse": {
-            "type": "object",
-            "properties": {
-                "language": {
-                    "description": "The language used for execution.",
-                    "type": "string"
-                },
-                "run": {
-                    "description": "The result of the execution.",
-                    "allOf": [
-                        {
-                            "$ref": "#/definitions/dto.Run"
-                        }
-                    ]
-                },
-                "version": {
-                    "description": "The version of the language used.",
-                    "type": "string"
-                }
-            }
-        },
-        "dto.File": {
-            "type": "object",
-            "required": [
-                "content"
-            ],
-            "properties": {
-                "content": {
-                    "type": "string"
-                },
-                "encoding": {
-                    "type": "string",
-                    "default": "utf8"
-                },
-                "name": {
-                    "type": "string"
-                }
-            }
-        },
-        "dto.Run": {
-            "type": "object",
-            "properties": {
-                "code": {
-                    "description": "The exit code of the program.",
-                    "type": "integer"
-                },
-                "cpu_time": {
-                    "description": "CPU time spent in execution.",
-                    "type": "integer"
-                },
-                "memory": {
-                    "description": "Memory used by the program.",
-                    "type": "integer"
-                },
-                "message": {
-                    "description": "Message related to the execution result.",
-                    "type": "string"
-                },
-                "output": {
-                    "description": "The final output.",
-                    "type": "string"
-                },
-                "signal": {
-                    "description": "The signal received during execution.",
-                    "type": "string"
-                },
-                "status": {
-                    "description": "The status of the execution.",
-                    "type": "string"
-                },
-                "stderr": {
-                    "description": "The error output to stderr.",
-                    "type": "string"
-                },
-                "stdout": {
-                    "description": "The output to stdout.",
-                    "type": "string"
-                },
-                "wall_time": {
-                    "description": "Wall time taken for execution.",
-                    "type": "integer"
-                }
-            }
-        },
         "dto.RuntimeResponse": {
             "type": "object",
             "properties": {
@@ -263,6 +240,32 @@ const docTemplate = `{
                 },
                 "version": {
                     "type": "string"
+                }
+            }
+        },
+        "dto.TestCaseResult": {
+            "description": "Result of a single test case execution.",
+            "type": "object",
+            "properties": {
+                "actual": {
+                    "description": "The actual output produced by the program",
+                    "type": "string"
+                },
+                "expected": {
+                    "description": "The expected output of the program",
+                    "type": "string"
+                },
+                "input": {
+                    "description": "The input provided to the program",
+                    "type": "string"
+                },
+                "message": {
+                    "description": "Details about the result or any error",
+                    "type": "string"
+                },
+                "passed": {
+                    "description": "Whether the output matched the expected output",
+                    "type": "boolean"
                 }
             }
         }

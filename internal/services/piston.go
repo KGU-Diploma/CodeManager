@@ -15,7 +15,7 @@ func NewPistonService() *PistonService {
 	return &PistonService{}
 }
 
-func (ps *PistonService) ExecuteCode(req dto.ExecuteRequest) (*dto.ExecuteResponse, error) {
+func (ps *PistonService) ExecuteCode(req dto.ExecuteRequest) (*dto.PistonExecuteResponse, error) {
 	body, err := json.Marshal(req)
 	if err != nil {
 		return nil, fmt.Errorf("failed to marshal request: %w", err)
@@ -31,7 +31,7 @@ func (ps *PistonService) ExecuteCode(req dto.ExecuteRequest) (*dto.ExecuteRespon
 	if resp.StatusCode != http.StatusOK {
 		return nil, fmt.Errorf("unexpected status code: %d", resp.StatusCode)
 	}
-	var result dto.ExecuteResponse
+	var result dto.PistonExecuteResponse
 	err = json.NewDecoder(resp.Body).Decode(&result)
 	if err != nil {
 		return nil, fmt.Errorf("failed to decode response: %w", err)

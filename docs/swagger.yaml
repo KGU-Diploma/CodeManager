@@ -1,5 +1,47 @@
 definitions:
   dto.ExecuteRequest:
+    properties:
+      piston_execute_request:
+        $ref: '#/definitions/dto.PistonExecuteRequest'
+      task_id:
+        type: string
+    required:
+    - piston_execute_request
+    - task_id
+    type: object
+  dto.File:
+    properties:
+      content:
+        type: string
+      encoding:
+        default: utf8
+        type: string
+      name:
+        type: string
+    required:
+    - content
+    type: object
+  dto.MultiExecuteResponse:
+    description: Response containing the results of test execution and linting issues.
+    properties:
+      language:
+        description: The programming language used
+        type: string
+      lint_issues:
+        description: List of linting issues, if any
+        items:
+          type: string
+        type: array
+      results:
+        description: The results of each test case executed
+        items:
+          $ref: '#/definitions/dto.TestCaseResult'
+        type: array
+      version:
+        description: The version of the language used
+        type: string
+    type: object
+  dto.PistonExecuteRequest:
     description: Execute a code with specified parameters.
     properties:
       args:
@@ -39,64 +81,6 @@ definitions:
     - language
     - version
     type: object
-  dto.ExecuteResponse:
-    properties:
-      language:
-        description: The language used for execution.
-        type: string
-      run:
-        allOf:
-        - $ref: '#/definitions/dto.Run'
-        description: The result of the execution.
-      version:
-        description: The version of the language used.
-        type: string
-    type: object
-  dto.File:
-    properties:
-      content:
-        type: string
-      encoding:
-        default: utf8
-        type: string
-      name:
-        type: string
-    required:
-    - content
-    type: object
-  dto.Run:
-    properties:
-      code:
-        description: The exit code of the program.
-        type: integer
-      cpu_time:
-        description: CPU time spent in execution.
-        type: integer
-      memory:
-        description: Memory used by the program.
-        type: integer
-      message:
-        description: Message related to the execution result.
-        type: string
-      output:
-        description: The final output.
-        type: string
-      signal:
-        description: The signal received during execution.
-        type: string
-      status:
-        description: The status of the execution.
-        type: string
-      stderr:
-        description: The error output to stderr.
-        type: string
-      stdout:
-        description: The output to stdout.
-        type: string
-      wall_time:
-        description: Wall time taken for execution.
-        type: integer
-    type: object
   dto.RuntimeResponse:
     properties:
       aliases:
@@ -107,6 +91,25 @@ definitions:
         type: string
       version:
         type: string
+    type: object
+  dto.TestCaseResult:
+    description: Result of a single test case execution.
+    properties:
+      actual:
+        description: The actual output produced by the program
+        type: string
+      expected:
+        description: The expected output of the program
+        type: string
+      input:
+        description: The input provided to the program
+        type: string
+      message:
+        description: Details about the result or any error
+        type: string
+      passed:
+        description: Whether the output matched the expected output
+        type: boolean
     type: object
 info:
   contact: {}
@@ -130,7 +133,7 @@ paths:
         "200":
           description: Successfully run and analyzed the data
           schema:
-            $ref: '#/definitions/dto.ExecuteResponse'
+            $ref: '#/definitions/dto.MultiExecuteResponse'
         "400":
           description: Invalid input
           schema:

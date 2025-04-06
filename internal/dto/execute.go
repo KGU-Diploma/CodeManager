@@ -2,7 +2,7 @@ package dto
 
 // ExecuteRequest represents the request data for execution.
 // @Description Execute a code with specified parameters.
-type ExecuteRequest struct {
+type PistonExecuteRequest struct {
     Language           string        `json:"language" validate:"required" swaggo:"description=The language to use for execution"`
     Version            string        `json:"version" validate:"required" swaggo:"description=The version of the language"`
     Files              []File        `json:"files" validate:"required,dive" swaggo:"description=The files to be executed"`
@@ -24,7 +24,7 @@ type File struct {
 }
 
 // ExecuteResponse represents the response after execution.
-type ExecuteResponse struct {
+type PistonExecuteResponse struct {
     Run Run `json:"run"`  // The result of the execution.
     Language string `json:"language"` // The language used for execution.
     Version string `json:"version"`   // The version of the language used.
@@ -42,4 +42,29 @@ type Run struct {
     Status  string `json:"status"` // The status of the execution.
     CPUTime int    `json:"cpu_time"` // CPU time spent in execution.
     WallTime int   `json:"wall_time"` // Wall time taken for execution.
+}
+
+// TestCaseResult represents the result of a single test case execution.
+// @Description Result of a single test case execution.
+type TestCaseResult struct {
+	Input    string `json:"input" swaggo:"description=The input provided to the program"`         // The input provided to the program
+	Expected string `json:"expected" swaggo:"description=The expected output of the program"`      // The expected output of the program
+	Actual   string `json:"actual" swaggo:"description=The actual output produced by the program"` // The actual output produced by the program
+	Passed   bool   `json:"passed" swaggo:"description=Whether the output matched the expected"`   // Whether the output matched the expected output
+	Message  string `json:"message" swaggo:"description=Details about the result or any error"`    // Details about the result or any error
+}
+
+// MultiExecuteResponse represents the response after running all test cases.
+// @Description Response containing the results of test execution and linting issues.
+type MultiExecuteResponse struct {
+	Language   string           `json:"language" swaggo:"description=The programming language used"`           // The programming language used
+	Version    string           `json:"version" swaggo:"description=The version of the language used"`         // The version of the language used
+	Results    []TestCaseResult `json:"results" swaggo:"description=The results of each test case executed"`   // The results of each test case executed
+	LintIssues []string         `json:"lint_issues,omitempty" swaggo:"description=List of linting issues"`     // List of linting issues, if any
+}
+
+
+type ExecuteRequest struct {
+    TaskId string `json:"task_id" validate:"required" swaggo:"description=The ID of the task"`
+    PistonExecuteRequest PistonExecuteRequest `json:"piston_execute_request" validate:"required" swaggo:"description=The request data for execution by piston engine"`
 }

@@ -22,7 +22,12 @@ func (l *PythonLinter) Lint(source string) ([]string, error) {
 		return nil, fmt.Errorf("failed to write source to file: %w", err)
 	}
 
-	cmd := exec.Command("docker", "run", "--rm", "-v", fmt.Sprintf("%s:/app", "/tmp"), "python-linter", tempFile)
+	cmd := exec.Command(
+		"docker", "run", "--rm",
+		"-v", "/tmp:/app",
+		"python-linter",
+		"/app/temp_code.py",
+	)
 	var out bytes.Buffer
 	cmd.Stdout = &out
 	cmd.Stderr = &out

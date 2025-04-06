@@ -10,7 +10,7 @@ func NewLinterFactory() *LinterFactory {
 
 func (f *LinterFactory) NewLinter(language string) (Linter, error) {
 	switch language {
-	case "python":
+	case "python3":
 		return NewPythonLinter(), nil
 	default:
 		return nil, fmt.Errorf("unsupported language: %s", language)
