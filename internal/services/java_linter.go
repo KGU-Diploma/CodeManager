@@ -1,4 +1,3 @@
-
 package services
 
 import (
@@ -10,14 +9,14 @@ import (
 	"CodeManager/internal/services/tools"
 )
 
-type PythonLinter struct{}
+type JavaLinter struct{}
 
-func NewPythonLinter() *PythonLinter {
-	return &PythonLinter{}
+func NewJavaLinter() *JavaLinter {
+	return &JavaLinter{}
 }
 
-func (l *PythonLinter) Lint(source string) ([]string, error) {
-	tempFile := "/tmp/temp_code.py"
+func (l *JavaLinter) Lint(source string) ([]string, error) {
+	tempFile := "/tmp/Main.java"
 	err := tools.WriteSourceToFile(tempFile, source)
 	if err != nil {
 		return nil, fmt.Errorf("failed to write source to file: %w", err)
@@ -26,29 +25,30 @@ func (l *PythonLinter) Lint(source string) ([]string, error) {
 	cmd := exec.Command(
 		"docker", "run", "--rm",
 		"-v", "/tmp:/app",
-		"python-linter",
-		"/app/temp_code.py",
+		"java-linter",
+		"javac", "/app/Main.java",
 	)
+
 	var out bytes.Buffer
 	cmd.Stdout = &out
 	cmd.Stderr = &out
 
 	cmd.Run()
 	output := out.String()
-	result := l.ExtractLinterResult(output)
+	issues := l.ExtractLinterResult(output)
 
-	return result, nil
+	return issues, nil
 }
 
-func (l *PythonLinter) ExtractLinterResult(output string) []string {
+
+func (l *JavaLinter) ExtractLinterResult(output string) []string {
 	var issues []string
-	
+	lines := strings.Split(output, "\n")
+	r := regexp.MustCompile(`^.+\.java:\d+:\s+error:`)
+
 	if len(output) == 0 {
 		return issues
 	}
-
-	lines := strings.Split(output, "\n")
-	r := regexp.MustCompile(`^.+:\d+:\d+:\s+[A-Z]\d{3}`)
 
 	for _, line := range lines {
 		if r.MatchString(line) {
