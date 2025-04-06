@@ -6,7 +6,7 @@ import (
 
 type (
 	Piston interface {
-		ExecuteCode(req dto.ExecuteRequest) (*dto.PistonExecuteResponse, error)
+		ExecuteCode(req dto.PistonExecuteRequest) (*dto.PistonExecuteResponse, error)
 		GetRuntimes() ([]dto.RuntimeResponse, error)
 	}
 

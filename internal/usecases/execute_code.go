@@ -5,6 +5,7 @@ import (
 	"CodeManager/internal/repositories"
 	"CodeManager/internal/services"
 	"CodeManager/internal/services/tools"
+	"CodeManager/internal/repositories/models"
 	"fmt"
 )
 
@@ -23,17 +24,30 @@ func NewExecuteCodeUsecase(service *services.Service, repo *repositories.Reposit
 }
 
 func (u *ExecuteCodeUsecaseImpl) Handle(req dto.ExecuteRequest) (*dto.MultiExecuteResponse, error) {
-	testData, err := u.repos.TestData.GetTestDataByTaskId("f75a267e-0756-49fb-984b-82f9e2b5a5fb")
-	if err != nil {
-		return nil, fmt.Errorf("failed to get test data: %w", err)
-	}
+	//testData, err := u.repos.TestData.GetTestDataByTaskId("f75a267e-0756-49fb-984b-82f9e2b5a5fb")
+//	if err != nil {
+//		return nil, fmt.Errorf("failed to get test data: %w", err)
+//	}
 
 	var testResults []dto.TestCaseResult
-
+	testData := []models.TestData {
+		{
+			Id: "1",
+			TaskId: "f75a267e-0756-49fb-984b-82f9e2b5a5fb",
+			Input: "pasha\n",
+			Output: "Hello, pasha\n",
+		},
+		{
+			Id: "1",
+			TaskId: "f75a267e-0756-49fb-984b-82f9e2b5a5fb",
+			Input: "popa\n",
+			Output: "Hello, popa\n",
+		},
+	}
 	for _, test := range testData {
 		req.PistonExecuteRequest.Stdin = test.Input
 
-		pistonResult, err := u.services.Piston.ExecuteCode(req)
+		pistonResult, err := u.services.Piston.ExecuteCode(req.PistonExecuteRequest)
 		if err != nil {
 			testResults = append(testResults, dto.TestCaseResult{
 				Input:    test.Input,

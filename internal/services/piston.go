@@ -15,7 +15,7 @@ func NewPistonService() *PistonService {
 	return &PistonService{}
 }
 
-func (ps *PistonService) ExecuteCode(req dto.ExecuteRequest) (*dto.PistonExecuteResponse, error) {
+func (ps *PistonService) ExecuteCode(req dto.PistonExecuteRequest) (*dto.PistonExecuteResponse, error) {
 	body, err := json.Marshal(req)
 	if err != nil {
 		return nil, fmt.Errorf("failed to marshal request: %w", err)
