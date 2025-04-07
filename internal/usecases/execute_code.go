@@ -3,22 +3,23 @@ package usecases
 import (
 	"CodeManager/internal/dto"
 	"CodeManager/internal/repositories"
-	"CodeManager/internal/services"
-	"CodeManager/internal/services/tools"
 	"CodeManager/internal/repositories/models"
+	"CodeManager/internal/services"
+	"CodeManager/internal/services/linting"
+	"CodeManager/internal/services/tools"
 	"fmt"
 )
 
 type ExecuteCodeUsecaseImpl struct {
 	services *services.Service
-	linterFactory *services.LinterFactory
+	linterFactory *linting.LinterFactory
 	repos *repositories.Repository
 }
 
-func NewExecuteCodeUsecase(service *services.Service, repo *repositories.Repository) ExecuteCodeUsecase {
+func NewExecuteCodeUsecase(service *services.Service, linterFactory *linting.LinterFactory, repo *repositories.Repository) ExecuteCodeUsecase {
 	return &ExecuteCodeUsecaseImpl{
 		services: service,
-		linterFactory: services.NewLinterFactory(),
+		linterFactory: linterFactory,
 		repos: repo,
 	}
 }

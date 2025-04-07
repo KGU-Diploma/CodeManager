@@ -2,6 +2,6 @@ FROM python:3.9-slim
 
 RUN pip install ruff
 
-WORKDIR /app
+WORKDIR /code
 
-ENTRYPOINT ["ruff", "check"]
+ENTRYPOINT ["ruff", "check", "--no-cache"]

@@ -4,6 +4,7 @@ import (
 	"CodeManager/internal/dto"
 	"CodeManager/internal/repositories"
 	"CodeManager/internal/services"
+	"CodeManager/internal/services/linting"
 )
 
 type (
@@ -21,9 +22,9 @@ type (
 	}
 )
 
-func NewUsecase(services *services.Service, repos *repositories.Repository) *Usecase {
+func NewUsecase(services *services.Service, linterFactory *linting.LinterFactory, repos *repositories.Repository) *Usecase {
 	return &Usecase{
-		ExecuteCodeUsecase: NewExecuteCodeUsecase(services, repos),
+		ExecuteCodeUsecase: NewExecuteCodeUsecase(services, linterFactory, repos),
 		GetRuntimesUsecase: NewGetRuntimesUsecase(services),
 	}
 }

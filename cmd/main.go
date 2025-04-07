@@ -11,7 +11,9 @@ import (
 	"CodeManager/internal/pkg/logger"
 	"CodeManager/internal/repositories"
 	"CodeManager/internal/services"
+	"CodeManager/internal/services/linting"
 	"CodeManager/internal/usecases"
+	"CodeManager/internal/services/container"
 )
 
 func main() {
@@ -29,7 +31,9 @@ func main() {
 	}
 	repos := repositories.NewRepository(db)
 	service := services.NewService()
-	usecases := usecases.NewUsecase(service, repos)
+	runner := container.NewDockerRunner()
+	linterFactory := linting.NewLinterFactory(runner)
+	usecases := usecases.NewUsecase(service, linterFactory, repos)
 	handler := api.NewHandler(usecases)
 	gitEngine := handler.SetupRoutes()
 
