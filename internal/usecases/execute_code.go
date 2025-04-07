@@ -3,7 +3,6 @@ package usecases
 import (
 	"CodeManager/internal/dto"
 	"CodeManager/internal/repositories"
-	"CodeManager/internal/repositories/models"
 	"CodeManager/internal/services"
 	"CodeManager/internal/services/linting"
 	"CodeManager/internal/services/tools"
@@ -25,26 +24,13 @@ func NewExecuteCodeUsecase(service *services.Service, linterFactory *linting.Lin
 }
 
 func (u *ExecuteCodeUsecaseImpl) Handle(req dto.ExecuteRequest) (*dto.MultiExecuteResponse, error) {
-	//testData, err := u.repos.TestData.GetTestDataByTaskId("f75a267e-0756-49fb-984b-82f9e2b5a5fb")
-//	if err != nil {
-//		return nil, fmt.Errorf("failed to get test data: %w", err)
-//	}
+	testData, err := u.repos.TestData.GetTestDataByTaskId("f75a267e-0756-49fb-984b-82f9e2b5a5fb")
+	if err != nil {
+		return nil, fmt.Errorf("failed to get test data: %w", err)
+	}
 
 	var testResults []dto.TestCaseResult
-	testData := []models.TestData {
-		{
-			Id: "1",
-			TaskId: "f75a267e-0756-49fb-984b-82f9e2b5a5fb",
-			Input: "pasha\n",
-			Output: "Hello, pasha\n",
-		},
-		{
-			Id: "1",
-			TaskId: "f75a267e-0756-49fb-984b-82f9e2b5a5fb",
-			Input: "popa\n",
-			Output: "Hello, popa\n",
-		},
-	}
+
 	for _, test := range testData {
 		req.PistonExecuteRequest.Stdin = test.Input
 

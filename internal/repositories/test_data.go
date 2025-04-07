@@ -18,9 +18,9 @@ func NewPgTestDataRepository(connection *sqlx.DB) *PgTestDataRepository {
 func (r *PgTestDataRepository) GetTestDataByTaskId(taskId string) ([]models.TestData, error) {
 	var testData []models.TestData
 
-	query := `SELECT * FROM t_programming WHERE task_id = $1`
+	query := `SELECT * FROM t_programming WHERE id_task = $1`
 
-	err := r.db.Get(&testData, query, taskId)
+	err := r.db.Select(&testData, query, taskId)
 	if err != nil {
 		return nil, err
 	}
