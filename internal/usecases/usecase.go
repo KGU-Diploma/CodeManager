@@ -1,10 +1,10 @@
 package usecases
 
 import (
-	"CodeManager/internal/dto"
-	"CodeManager/internal/repositories"
-	"CodeManager/internal/services"
-	"CodeManager/internal/services/linting"
+	"SolutionService/internal/dto"
+	"SolutionService/internal/repositories"
+	"SolutionService/internal/services"
+	"SolutionService/internal/services/linting"
 )
 
 type (

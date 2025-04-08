@@ -1,7 +1,7 @@
 package services
 
 import (
-	"CodeManager/internal/dto"
+	"SolutionService/internal/dto"
 	"bytes"
 	"encoding/json"
 	"fmt"

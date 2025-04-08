@@ -1,8 +1,8 @@
 package usecases
 
 import (
-	"CodeManager/internal/dto"
-	"CodeManager/internal/services"
+	"SolutionService/internal/dto"
+	"SolutionService/internal/services"
 	"fmt"
 )
 

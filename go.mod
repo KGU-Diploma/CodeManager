@@ -1,4 +1,4 @@
-module CodeManager
+module SolutionService
 
 go 1.23.4
 

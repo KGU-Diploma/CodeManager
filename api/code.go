@@ -1,7 +1,7 @@
 package api
 
 import (
-	"CodeManager/internal/dto"
+	"SolutionService/internal/dto"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/exp/slog"
 )

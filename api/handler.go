@@ -1,7 +1,7 @@
 package api
 
 import (
-	"CodeManager/internal/usecases"
+	"SolutionService/internal/usecases"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-contrib/cors"
 	ginSwagger "github.com/swaggo/gin-swagger"

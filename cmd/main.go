@@ -6,14 +6,14 @@ import (
 	"net/http"
 	"time"
 
-	"CodeManager/api"
-	"CodeManager/internal/pkg/config"
-	"CodeManager/internal/pkg/logger"
-	"CodeManager/internal/repositories"
-	"CodeManager/internal/services"
-	"CodeManager/internal/services/linting"
-	"CodeManager/internal/usecases"
-	"CodeManager/internal/services/container"
+	"SolutionService/api"
+	"SolutionService/internal/pkg/config"
+	"SolutionService/internal/pkg/logger"
+	"SolutionService/internal/repositories"
+	"SolutionService/internal/services"
+	"SolutionService/internal/services/linting"
+	"SolutionService/internal/usecases"
+	"SolutionService/internal/services/container"
 )
 
 func main() {

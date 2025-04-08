@@ -1,11 +1,11 @@
 package usecases
 
 import (
-	"CodeManager/internal/dto"
-	"CodeManager/internal/repositories"
-	"CodeManager/internal/services"
-	"CodeManager/internal/services/linting"
-	"CodeManager/internal/services/tools"
+	"SolutionService/internal/dto"
+	"SolutionService/internal/repositories"
+	"SolutionService/internal/services"
+	"SolutionService/internal/services/linting"
+	"SolutionService/internal/services/tools"
 	"fmt"
 )
 

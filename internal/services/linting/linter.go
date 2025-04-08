@@ -1,8 +1,8 @@
 package linting
 
 import (
-	"CodeManager/internal/services"
-	"CodeManager/internal/services/container"
+	"SolutionService/internal/services"
+	"SolutionService/internal/services/container"
 	"fmt"
 )
 

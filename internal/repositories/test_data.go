@@ -1,8 +1,7 @@
 package repositories
 
 import (
-	"CodeManager/internal/repositories/models"
-
+	"SolutionService/internal/repositories/models"
 	"github.com/jmoiron/sqlx"
 )
 
