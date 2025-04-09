@@ -11,26 +11,25 @@ import (
 // WriteToTempFile создает временный файл с указанным содержимым
 // Возвращает путь к файлу и функцию очистки (defer)
 func WriteToTempFile(content, pattern string) (string, func(), error) {
-    dir, err := os.MkdirTemp("", "code-*")
-    if err != nil {
+	dir, err := os.MkdirTemp("", "code-*")
+	if err != nil {
 		slog.Error("Failed to create temp dir", "error", err)
-        return "", nil, fmt.Errorf("failed to create temp dir: %w", err)
-    }
+		return "", nil, fmt.Errorf("failed to create temp dir: %w", err)
+	}
 
-    cleanup := func() {
-        os.RemoveAll(dir)
-    }
+	cleanup := func() {
+		os.RemoveAll(dir)
+	}
 
-    filename := filepath.Join(dir, pattern)
-    if err := writeSourceToFile(filename, content); err != nil {
-        cleanup()
+	filename := filepath.Join(dir, pattern)
+	if err := writeSourceToFile(filename, content); err != nil {
+		cleanup()
 		slog.Error("Failed to write source to file", "filename", filename, "error", err)
-        return "", nil, fmt.Errorf("failed to write temp file: %w", err)
-    }
+		return "", nil, fmt.Errorf("failed to write temp file: %w", err)
+	}
 
-    return filename, cleanup, nil
+	return filename, cleanup, nil
 }
-
 
 func CompareExpectedAndActual(expected, actual string) bool {
 	// Normalize line endings and trim whitespace
@@ -58,6 +57,7 @@ func normalizeOutput(s string) string {
 func writeSourceToFile(filename, source string) error {
 	err := os.WriteFile(filename, []byte(source), 0644)
 	if err != nil {
+		slog.Error("Failed to write source to file", "error", err)
 		return fmt.Errorf("failed to write to file %s: %w", filename, err)
 	}
 	return nil

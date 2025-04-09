@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"SolutionService/internal/repositories/models"
+	"log/slog"
 
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
@@ -22,6 +23,7 @@ func (r *PgTestAnswerRepository) GetAllByTaskId(taskId uuid.UUID) ([]models.Test
 
 	err := r.db.Select(&testAnswers, query, taskId)
 	if err != nil {
+		slog.Error("Error getting all tasks by Id", "error", err)
 		return nil, err
 	}
 
