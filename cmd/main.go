@@ -30,7 +30,7 @@ func main() {
 		// todo slog.Fatal("Could not connect to database %v", err)
 	}
 	repos := repositories.NewRepository(db)
-	service := services.NewService()
+	service := services.NewService(repos)
 	runner := container.NewDockerRunner()
 	linterFactory := linting.NewLinterFactory(runner)
 	usecases := usecases.NewUsecase(service, linterFactory, repos)

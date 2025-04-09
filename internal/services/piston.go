@@ -9,13 +9,13 @@ import (
 	"time"
 )
 
-type PistonService struct{}
+type PistonServiceImpl struct{}
 
-func NewPistonService() *PistonService {
-	return &PistonService{}
+func NewPistonService() *PistonServiceImpl {
+	return &PistonServiceImpl{}
 }
 
-func (ps *PistonService) ExecuteCode(req dto.PistonExecuteRequest) (*dto.PistonExecuteResponse, error) {
+func (ps *PistonServiceImpl) ExecuteCode(req dto.PistonExecuteRequest) (*dto.PistonExecuteResponse, error) {
 	body, err := json.Marshal(req)
 	if err != nil {
 		return nil, fmt.Errorf("failed to marshal request: %w", err)
@@ -40,7 +40,7 @@ func (ps *PistonService) ExecuteCode(req dto.PistonExecuteRequest) (*dto.PistonE
 	return &result, nil
 }
 
-func (ps *PistonService) GetRuntimes() ([]dto.RuntimeResponse, error){
+func (ps *PistonServiceImpl) GetRuntimes() ([]dto.RuntimeResponse, error){
 	client := &http.Client{Timeout: 10 * time.Second}
 	resp, err := client.Get("http://192.168.0.2:2000/api/v2/runtimes")
 	if err != nil {

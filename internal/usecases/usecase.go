@@ -5,6 +5,8 @@ import (
 	"SolutionService/internal/repositories"
 	"SolutionService/internal/services"
 	"SolutionService/internal/services/linting"
+
+	"github.com/google/uuid"
 )
 
 type (
@@ -16,9 +18,14 @@ type (
 		Handle() ([]dto.RuntimeResponse, error)
 	}
 
+	CreateAnswerUsecase interface {
+		Handle(taskId uuid.UUID, request dto.CreateTestAnswerRequest) (dto.CreateTestAnswerResponse, error)
+	}
+
 	Usecase struct {
 		ExecuteCodeUsecase ExecuteCodeUsecase
 		GetRuntimesUsecase GetRuntimesUsecase
+		CreateAnswerUsecase CreateAnswerUsecase
 	}
 )
 
@@ -26,5 +33,6 @@ func NewUsecase(services *services.Service, linterFactory *linting.LinterFactory
 	return &Usecase{
 		ExecuteCodeUsecase: NewExecuteCodeUsecase(services, linterFactory, repos),
 		GetRuntimesUsecase: NewGetRuntimesUsecase(services),
+		CreateAnswerUsecase: NewCreateAnswerUsecase(services),
 	}
 }

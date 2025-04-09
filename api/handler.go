@@ -34,6 +34,7 @@ func (h *Handler) SetupRoutes() *gin.Engine {
 	{
 		domain.POST("/run-and-analyze", h.RunAndAnalyzeHandler)
 		domain.GET("/runtimes", h.GetRuntimesHandler)
+		domain.POST("/task/:id/", h.CreateTestAnswerHandler)
 	}
 
 	swagger := router.Group("")

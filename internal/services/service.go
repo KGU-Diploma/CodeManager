@@ -2,10 +2,13 @@ package services
 
 import (
 	"SolutionService/internal/dto"
+	"SolutionService/internal/repositories"
+	"SolutionService/internal/repositories/models"
+	"github.com/google/uuid"
 )
 
 type (
-	Piston interface {
+	PistonService interface {
 		ExecuteCode(req dto.PistonExecuteRequest) (*dto.PistonExecuteResponse, error)
 		GetRuntimes() ([]dto.RuntimeResponse, error)
 	}
@@ -15,12 +18,21 @@ type (
 		ExtractLinterResult(out string) []string
 	}
 
+	TestsService interface{
+		CreateTestAnswer(taskId uuid.UUID, request dto.CreateTestAnswerRequest) (dto.CreateTestAnswerResponse, error)
+		GetCorrectAnswer(testAnswers []models.TestAnswer) models.TestAnswer
+	}
+
 	Service struct {
-		Piston *PistonService
+		Piston PistonService
+		TestsService TestsService
 	}
 )
 
 
-func NewService() *Service {
-	return &Service{Piston: NewPistonService()}
+func NewService(repos *repositories.Repository) *Service {
+	return &Service{
+		Piston: NewPistonService(),
+		TestsService: NewTestsService(repos.TestsAnswerRepository, repos.SolutionRepository),
+	}
 }
