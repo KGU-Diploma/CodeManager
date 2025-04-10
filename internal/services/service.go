@@ -18,18 +18,15 @@ type (
 		ExtractLinterResult(out string) []string
 	}
 
-	TestsService interface{
-		CreateTestAnswer(taskId uuid.UUID, request dto.CreateTestAnswerRequest) (dto.CreateTestAnswerResponse, error)
-		GetCorrectAnswer(testAnswers []models.TestAnswer) models.TestAnswer
-	}
-
 	SolutionService interface {
-		CreateSolution (taskId, userId uuid.UUID, testResults []dto.TestCaseResult, code, language string, lintingResult bool) error
+		CreateCodingSolution(taskId string, userId uuid.UUID, testResults []dto.TestCaseResult, code, language string, lintingIssues []string) error
+		CreateTestSolution(taskId uuid.UUID, request dto.CreateTestAnswerRequest) (dto.CreateTestAnswerResponse, error)
+		GetCorrectAnswer(testAnswers []models.TestAnswer) models.TestAnswer
 	}
 
 	Service struct {
 		Piston PistonService
-		TestsService TestsService
+		SolutionService SolutionService
 	}
 )
 
@@ -37,6 +34,6 @@ type (
 func NewService(repos *repositories.Repository) *Service {
 	return &Service{
 		Piston: NewPistonService(),
-		TestsService: NewTestsService(repos.TestsAnswerRepository, repos.SolutionRepository),
+		SolutionService: NewSolutionService(repos.TestsAnswerRepository, repos.SolutionRepository),
 	}
 }
