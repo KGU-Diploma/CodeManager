@@ -24,8 +24,8 @@ func (r *PgSolutionRepository) CreateSolution(
     code, language, answer *string,
     lintingResult *bool,
 ) error {
-	query := `insert into t_solution (id_task, id_user, id_answer, is_correct, submitted_at, answer) values ($1, $2, $3, $4, $5, $6)`
-	_, err := r.db.Exec(query, taskId, userId, answerId, isCorrect, submittedAt, answer)
+	query := `insert into t_solution (id_task, id_user, id_answer, is_correct, submitted_at, code, language, answer, linting_result) values ($1, $2, $3, $4, $5, $6, $7, $8, $9)`
+	_, err := r.db.Exec(query, taskId, userId, answerId, isCorrect, submittedAt, code, language, answer, lintingResult)
 	if err != nil {
 		slog.Error("Error writing solution to database", "error", err)
 		return err
