@@ -2,9 +2,10 @@ package repositories
 
 import (
 	"SolutionService/internal/repositories/models"
-	"github.com/jmoiron/sqlx"
-	"github.com/google/uuid"
 	"time"
+
+	"github.com/google/uuid"
+	"github.com/jmoiron/sqlx"
 )
 
 type (
@@ -17,19 +18,20 @@ type (
 	}
 
 	SolutionRepository interface {
-		CreateSolution(taskId, userId, answerId uuid.UUID, isCorrect bool, subbmittedAt time.Time, answer *string) error	}
+		CreateSolution(taskId, userId, answerId uuid.UUID, isCorrect bool, subbmittedAt time.Time, answer, code, language *string) error
+	}
 
 	Repository struct {
-		TestData *PgTestDataRepository
+		TestData              *PgTestDataRepository
 		TestsAnswerRepository *PgTestAnswerRepository
-		SolutionRepository *PgSolutionRepository
+		SolutionRepository    *PgSolutionRepository
 	}
 )
 
 func NewRepository(connection *sqlx.DB) *Repository {
 	return &Repository{
-		TestData: NewPgTestDataRepository(connection),
+		TestData:              NewPgTestDataRepository(connection),
 		TestsAnswerRepository: NewPgTestAnswerRepository(connection),
-		SolutionRepository: NewPgSolutionRepository(connection),
+		SolutionRepository:    NewPgSolutionRepository(connection),
 	}
 }
