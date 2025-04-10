@@ -33,7 +33,7 @@ func (s *TestsServiceImpl) CreateTestAnswer(taskId uuid.UUID, request dto.Create
 
 	isCorrect := correctAnswer.Id == request.AnswerId
 
-	err = s.solutionRepository.CreateSolution(taskId, request.UserId, request.AnswerId, isCorrect, time.Now().UTC(), nil)
+	err = s.solutionRepository.CreateSolution(taskId, request.UserId, &request.AnswerId, isCorrect, time.Now(), nil, nil, nil, nil)
 	if err != nil {
 		slog.Info("Failed to create solution", "error", err)
 		return dto.CreateTestAnswerResponse{}, err

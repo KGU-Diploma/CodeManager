@@ -18,7 +18,14 @@ type (
 	}
 
 	SolutionRepository interface {
-		CreateSolution(taskId, userId, answerId uuid.UUID, isCorrect bool, subbmittedAt time.Time, answer, code, language *string) error
+		CreateSolution(
+			taskId, userId uuid.UUID,
+			answerId *uuid.UUID,
+			isCorrect bool,
+			submittedAt time.Time,
+			code, language, answer *string,
+			lintingResult *bool,
+		)  error
 	}
 
 	Repository struct {

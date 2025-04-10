@@ -23,6 +23,10 @@ type (
 		GetCorrectAnswer(testAnswers []models.TestAnswer) models.TestAnswer
 	}
 
+	SolutionService interface {
+		CreateSolution (taskId, userId uuid.UUID, testResults []dto.TestCaseResult, code, language string, lintingResult bool) error
+	}
+
 	Service struct {
 		Piston PistonService
 		TestsService TestsService
