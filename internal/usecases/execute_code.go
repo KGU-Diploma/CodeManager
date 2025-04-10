@@ -7,25 +7,27 @@ import (
 	"SolutionService/internal/services/linting"
 	"SolutionService/internal/services/tools"
 	"fmt"
+	"log/slog"
 )
 
 type ExecuteCodeUsecaseImpl struct {
-	services *services.Service
+	services      *services.Service
 	linterFactory *linting.LinterFactory
-	repos *repositories.Repository
+	repos         *repositories.Repository
 }
 
 func NewExecuteCodeUsecase(service *services.Service, linterFactory *linting.LinterFactory, repo *repositories.Repository) ExecuteCodeUsecase {
 	return &ExecuteCodeUsecaseImpl{
-		services: service,
+		services:      service,
 		linterFactory: linterFactory,
-		repos: repo,
+		repos:         repo,
 	}
 }
 
 func (u *ExecuteCodeUsecaseImpl) Handle(req dto.ExecuteRequest) (*dto.MultiExecuteResponse, error) {
 	testData, err := u.repos.TestData.GetTestDataByTaskId("f75a267e-0756-49fb-984b-82f9e2b5a5fb")
 	if err != nil {
+		slog.Error("Error getting test data by task ID", "error", err)
 		return nil, fmt.Errorf("failed to get test data: %w", err)
 	}
 
@@ -59,11 +61,13 @@ func (u *ExecuteCodeUsecaseImpl) Handle(req dto.ExecuteRequest) (*dto.MultiExecu
 
 	linter, err := u.linterFactory.NewLinter(req.PistonExecuteRequest.Language)
 	if err != nil {
+		slog.Error("Error creating linter", "error", err)
 		return nil, fmt.Errorf("failed to create linter: %w", err)
 	}
 
 	lintIssues, err := linter.Lint(req.PistonExecuteRequest.Files[0].Content)
 	if err != nil {
+		slog.Error("Error creating linter", "error", err)
 		return nil, fmt.Errorf("failed to lint code: %w", err)
 	}
 

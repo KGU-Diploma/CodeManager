@@ -3,6 +3,7 @@ package usecases
 import (
 	"SolutionService/internal/dto"
 	"SolutionService/internal/services"
+	"log/slog"
 
 	"github.com/google/uuid"
 )
@@ -20,6 +21,7 @@ func NewCreateAnswerUsecase(services *services.Service) CreateAnswerUsecase {
 func (u *CreateAnswerUsecaseImpl) Handle(taskId uuid.UUID, request dto.CreateTestAnswerRequest) (dto.CreateTestAnswerResponse, error) {
 	response, err := u.services.TestsService.CreateTestAnswer(taskId, request)
 	if err != nil {
+		slog.Error("Error creating test answer", "error", err)
 		return dto.CreateTestAnswerResponse{}, err
 	}
 

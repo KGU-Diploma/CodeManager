@@ -2,6 +2,8 @@ package repositories
 
 import (
 	"SolutionService/internal/repositories/models"
+	"log/slog"
+
 	"github.com/jmoiron/sqlx"
 )
 
@@ -13,7 +15,6 @@ func NewPgTestDataRepository(connection *sqlx.DB) *PgTestDataRepository {
 	return &PgTestDataRepository{connection}
 }
 
-
 func (r *PgTestDataRepository) GetTestDataByTaskId(taskId string) ([]models.TestData, error) {
 	var testData []models.TestData
 
@@ -21,6 +22,7 @@ func (r *PgTestDataRepository) GetTestDataByTaskId(taskId string) ([]models.Test
 
 	err := r.db.Select(&testData, query, taskId)
 	if err != nil {
+		slog.Error("Error Getting Test Data By Task Identifier", "error", err)
 		return nil, err
 	}
 

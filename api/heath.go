@@ -1,6 +1,8 @@
 package api
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -11,7 +13,7 @@ import (
 // @Success 200 {object} string "Pong response"
 // @Router /health/ping [get]
 func (h *Handler) Ping(c *gin.Context) {
-	c.JSON(200, gin.H{
+	c.JSON(http.StatusOK, gin.H{
 		"message": "pong",
 	})
 }

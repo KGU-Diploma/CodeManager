@@ -2,6 +2,8 @@ package api
 
 import (
 	"SolutionService/internal/dto"
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 	"golang.org/x/exp/slog"
 )
@@ -20,18 +22,19 @@ import (
 func (h *Handler) RunAndAnalyzeHandler(c *gin.Context) {
 	var request dto.ExecuteRequest
 	if err := c.ShouldBindJSON(&request); err != nil {
-		c.JSON(400, "Invalid input")
+		slog.Error("Invalid input", "error", err)
+		c.JSON(http.StatusBadRequest, "Invalid input")
 		return
 	}
 
 	result, err := h.usecases.ExecuteCodeUsecase.Handle(request)
 	if err != nil {
 		slog.Error("Failed to execute code", "error", err)
-		c.JSON(500, "Internal server error")
+		c.JSON(http.StatusInternalServerError, "Internal server error")
 		return
 	}
-	
-	c.JSON(200, result)
+
+	c.JSON(http.StatusOK, result)
 }
 
 // GetRuntimesHandler godoc
@@ -46,9 +49,8 @@ func (h *Handler) GetRuntimesHandler(c *gin.Context) {
 	runtimes, err := h.usecases.GetRuntimesUsecase.Handle()
 	if err != nil {
 		slog.Error("Failed to fetch runtimes", "error", err)
-		c.JSON(500, "Failed to fetch runtimes")
+		c.JSON(http.StatusInternalServerError, "Failed to fetch runtimes")
 		return
 	}
-	c.JSON(200, runtimes)
+	c.JSON(http.StatusOK, runtimes)
 }
-
