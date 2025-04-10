@@ -8,6 +8,8 @@ import (
 	"SolutionService/internal/services/tools"
 	"fmt"
 	"log/slog"
+
+	"github.com/google/uuid"
 )
 
 type ExecuteCodeUsecaseImpl struct {
@@ -59,20 +61,24 @@ func (u *ExecuteCodeUsecaseImpl) Handle(req dto.ExecuteRequest) (*dto.MultiExecu
 		})
 	}
 
-	linter, err := u.linterFactory.NewLinter(req.PistonExecuteRequest.Language)
+	codeLanguage := req.PistonExecuteRequest.Language
+	linter, err := u.linterFactory.NewLinter(codeLanguage)
 	if err != nil {
 		slog.Error("Error creating linter", "error", err)
 		return nil, fmt.Errorf("failed to create linter: %w", err)
 	}
 
-	lintIssues, err := linter.Lint(req.PistonExecuteRequest.Files[0].Content)
+	fileContent := req.PistonExecuteRequest.Files[0].Content
+
+	lintIssues, err := linter.Lint(fileContent)
 	if err != nil {
 		slog.Error("Error creating linter", "error", err)
 		return nil, fmt.Errorf("failed to lint code: %w", err)
 	}
-
+	
+	err = u.services.SolutionService.CreateCodingSolution(req.TaskId, uuid.UUID{}, testResults, fileContent, codeLanguage, lintIssues)
 	response := &dto.MultiExecuteResponse{
-		Language:   req.PistonExecuteRequest.Language,
+		Language:   codeLanguage,
 		Version:    req.PistonExecuteRequest.Version,
 		Results:    testResults,
 		LintIssues: lintIssues,

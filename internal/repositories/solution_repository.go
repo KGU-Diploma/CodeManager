@@ -16,9 +16,16 @@ func NewPgSolutionRepository(connection *sqlx.DB) *PgSolutionRepository {
 	return &PgSolutionRepository{connection}
 }
 
-func (r *PgSolutionRepository) CreateSolution(taskId, userId, answerId uuid.UUID, isCorrect bool, subbmittedAt time.Time, answer *string) error {
-	query := `insert into t_solution (id_task, id_user, id_answer, is_correct, submitted_at, answer) values ($1, $2, $3, $4, $5, $6)`
-	_, err := r.db.Exec(query, taskId, userId, answerId, isCorrect, subbmittedAt, answer)
+func (r *PgSolutionRepository) CreateSolution(
+    taskId, userId uuid.UUID,
+	answerId *uuid.UUID,
+    isCorrect bool,
+    submittedAt time.Time,
+    code, language, answer *string,
+    lintingResult *bool,
+) error {
+	query := `insert into t_solution (id_task, id_user, id_answer, is_correct, submitted_at, code, language, answer, linting_result) values ($1, $2, $3, $4, $5, $6, $7, $8, $9)`
+	_, err := r.db.Exec(query, taskId, userId, answerId, isCorrect, submittedAt, code, language, answer, lintingResult)
 	if err != nil {
 		slog.Error("Error writing solution to database", "error", err)
 		return err
